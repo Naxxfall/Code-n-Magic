@@ -25,18 +25,23 @@ function renderCloud (ctx, color, dot1, dot2, dot3, dot4, dot5, dot6, shadowOffs
   ctx.lineTo(dot1.x, dot1.y);
   ctx.closePath();
   ctx.fill();
-};
+}
 
-function renderPlayerGistogram(ctx, name, width, height, startPoint){
-  var color;
-  if (name === "ВЫ"){
-    color = "rgba(255, 0, 0, 1)";
-  }
-  else {
-    color = 'rgba(0, 0, 255, ' + Math.random().toString() + ')';
-  }
-  ctx.fillStyle = "color";
+function renderPlayerGistogram(ctx, name, time, color, width, height, startPoint){
+  ctx.fillStyle = color;
   ctx.fillRect(startPoint.x,startPoint.y-height, width, height);
+  ctx.fillStyle = "#000000"
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText(name, startPoint.x + width/2, startPoint.y);
+  ctx.save();
+  ctx.translate(startPoint.x, startPoint.y);
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.rotate(-90 * Math.PI / 180);
+  //ctx.fillText(time.toString(), startPoint.x + width/2, startPoint.y + 5);
+  ctx.fillText((time / 1000.0).toFixed(1) + ' c.', 5, width/2);
+  ctx.restore();
 }
 
 class Dot{
@@ -54,6 +59,25 @@ window.renderStatistics = function (ctx, names, times) {
   var cloudDot5 = new Dot(100, 280);
   var cloudDot6 = new Dot(120, 145);
   var shadowOffset = 10;
+  var gistogramColor;
+  var gistogramStartPoint = new Dot (155, 220);
+  var gistogramMaxTime = Math.max.apply(this, times);
   renderCloud(ctx, "#ffffff", cloudDot1, cloudDot2, cloudDot3, cloudDot4, cloudDot5, cloudDot6, shadowOffset);
+  ctx.fillStyle = "#000000"
+  ctx.font = "16px PT Mono sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText("Ура вы победили!", 310, 16);
+  ctx.fillText("Список результатов:", 310, 38);
+  for (var i=0; i<names.length; i++ ){
+    if (names[i] === "Вы"){
+      gistogramColor = "rgba(255, 0, 0, 1)";
+    }
+    else {
+      gistogramColor = 'rgba(0, 0, 255, ' + Math.random().toString() + ')';
+    }
+    renderPlayerGistogram(ctx, names[i], times[i], gistogramColor, 40, Math.floor(150*times[i]/gistogramMaxTime), gistogramStartPoint);
+    gistogramStartPoint.x += 90;
+  }
 
-};
+}
