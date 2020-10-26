@@ -41,7 +41,7 @@ function setupOpenPressHandler(evt){
 
 function setupClosePressHandler(evt){
   if ((evt.target === setupClose && (evt.type === "click" || evt.code === "Enter")) ||
-    (evt.target !== setupUserName && evt.code === "Escape")){
+  (evt.target !== setupUserName && evt.code === "Escape")){
     evt.preventDefault();
     setupClose.removeEventListener("click", setupClosePressHandler);
     setupOpen.removeEventListener("keydown", setupClosePressHandler);
@@ -58,8 +58,15 @@ function setupClosePressHandler(evt){
   }
 }
 
-function setupSubmitPressHandler(){
-  setupWizardForm.submit();
+function setupSubmitPressHandler(evt){
+  var sendSuccess = function (){
+    setupClose.dispatchEvent(new Event("click"));
+  }
+  var sendError = function (errorMessage){
+    alert(errorMessage);
+  }
+  evt.preventDefault();
+  backend.save(new FormData(setupWizardForm), sendSuccess, sendError);
 }
 
 function wizardClickHandler(evt){
