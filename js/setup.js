@@ -76,6 +76,7 @@ function wizardClickHandler(evt){
     }
     while (setupWizardCoat.style.fill === setupPlayer.querySelector('input[name="coat-color"]').value);
     setupPlayer.querySelector('input[name="coat-color"]').value = setupWizardCoat.style.fill;
+    debounce(showSimilarWizards, 1000);
     return;
   }
   if (evt.target === setupWizardEyes){
@@ -84,6 +85,7 @@ function wizardClickHandler(evt){
     }
     while (setupWizardEyes.style.fill === setupPlayer.querySelector('input[name="eyes-color"]').value);
     setupPlayer.querySelector('input[name="eyes-color"]').value = setupWizardEyes.style.fill;
+    debounce(showSimilarWizards, 1000);
   }
 }
 
